@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixed Signals &mdash; Attribution &amp; ROAS, Audited</title>
+<meta name="description" content="Audit the gap between what Google, Meta and Apple claim and your actual receipts &mdash; the overcounting delta that's quietly inflating your ROAS.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=optional" rel="stylesheet">
+<!-- Brand colors and fonts, plain CSS. No custom classes: this only feeds Bootstrap's own
+     theme variables, plus the heading font (Bootstrap has no variable for that).
+     Palette:  ink #1B3A2F (27,58,47)    paper #EEEFE7 (238,239,231)   paper-deep #E1DFD1
+               blue #2E5A86 (46,90,134)  red #9C3B27 (156,59,39)       slate #5B6960 (91,105,96)
+               card #F7F6F0
+     Bootstrap needs some colors as "r,g,b" numbers (the -rgb lines). If you change a hex
+     value, change its matching r,g,b numbers too. -->
+<style>
+  :root{
+    /* page background and text */
+    --bs-body-bg: #EEEFE7;            --bs-body-bg-rgb: 238,239,231;   /* paper */
+    --bs-body-color: #1B3A2F;         --bs-body-color-rgb: 27,58,47;   /* ink */
+    --bs-emphasis-color: #1B3A2F;     --bs-heading-color: #1B3A2F;     /* ink */
+    /* secondary text (text-body-secondary) and soft backgrounds */
+    --bs-secondary-color: #5B6960;    --bs-secondary-rgb: 91,105,96;   /* slate */
+    --bs-secondary-bg: #E1DFD1;                                        /* paper-deep */
+    --bs-tertiary-bg: #F7F6F0;                                         /* card */
+    /* accent colors: text-primary = blue, text-danger = red */
+    --bs-primary-rgb: 46,90,134;                                       /* blue */
+    --bs-danger-rgb: 156,59,39;                                        /* red */
+    /* bg-dark / border-dark = ink, bg-light / text-light = paper */
+    --bs-dark-rgb: 27,58,47;          --bs-light-rgb: 238,239,231;
+    /* hairline rules */
+    --bs-border-color: rgba(27,58,47,0.18);
+    --bs-link-color-rgb: 27,58,47;    --bs-link-hover-color-rgb: 46,90,134;
+    --bs-font-sans-serif: 'IBM Plex Sans', system-ui, sans-serif;
+    --bs-font-monospace: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-family: 'Fraunces', Georgia, serif; }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     XL (1200PX AND WIDER)
+     Shown only at this screen size (d-none d-xl-block). Edit the content here
+     to tailor it for this size; the other parts are not affected.
+     ====================================================================== -->
+<div class="d-none d-xl-block">
+  <header class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="lh-sm">
+          <span class="h5 fw-semibold d-block mb-0">Mixed Signals</span>
+          <span class="small text-body-secondary">Attribution, audited</span>
+        </div>
+        <a class="btn bg-dark text-light rounded-1 px-3" href="#contact-xl">Get in touch</a>
+      </div>
+    </div>
+  </header>
+   <section class="py-4"> 
+      <div class="container">
+      <div class="row"><div class="col-12">
+        <h1 class="display-6 fw-medium lh-sm" >Add your Attributed + Unattributed conversions.</h1>
+        <h3 class="display-6 fw-medium lh-sm"> Compare with Actual receipts. see the delta!</h3>
+        <h6 class="display-6 fw-medium lh-sm mb-auto">  is this a Multi Touch Attribution blindspot?</h6>
+        <h4 class="fs-3 lh-sm mb-auto">Tweak your Lookback Period & minimize conversion delta</h4>
+        <section class="py-2"> </section>
+         <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-xl">Get in touch</a>
+          <a class="link-dark link-underline-opacity-0 fw-medium" href="#how-it-works-xl">See how it works</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="channel-map-xl" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Every channel, mapped.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Before we show you the delta, here's where every channel actually sits &mdash; attribution window and funnel stage, no guessing.</p>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="fw-normal small text-body-secondary border-dark">Channel</th><th class="fw-normal small text-body-secondary border-dark">Lookback</th><th class="fw-normal small text-body-secondary border-dark">Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Search Ads</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Apple Search Ads</td><td class="font-monospace small text-body-secondary">30-day tap-through</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Meta Ads</td><td class="font-monospace small text-body-secondary">1-day view, 7-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Snap Ads</td><td class="font-monospace small text-body-secondary">1-day view, 28-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Email</td><td class="font-monospace small text-body-secondary">1-day view, 10-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Blog post visit</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Top</td></tr>
+            <tr><td class="text-danger fw-medium pt-4 border-dark">Unattributed (organic, self-driven) visitor</td><td class="pt-4 border-dark"></td><td class="text-primary pt-4 border-dark">sliding scale</td></tr>
+            <tr><td class="fw-medium">Same session conversion</td><td class="font-monospace small text-danger">1-day view, 1-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 2 days</td><td class="font-monospace small text-danger">1-day view, 2-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 3 days</td><td class="font-monospace small text-danger">1-day view, 3-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium border-dark">Conversion in 4 to 7 days</td><td class="font-monospace small text-danger border-dark">1-day view, 4&ndash;7-day click</td><td class="text-danger border-dark">High-intent, late-stage</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section class="border-top py-5">
+    <div class="container">
+      <div class="row g-4 mb-3">
+        <!-- Card 1 -->
+        <div class="col-5">
+          <div class="card h-100 bg-body-tertiary shadow-sm rounded-0 position-relative">
+            <div class="card-body p-4 pb-5">
+              <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition, Remittance USD-INR</p>
+              <dl class="mb-0">
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                  <dt class="fw-normal">Google claim</dt>
+                  <dd class="font-monospace mb-0">30-day window</dd>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                  <dt class="fw-normal">Measured lookback window</dt>
+                  <dd class="font-monospace mb-0">2 day</dd>
+                </div>
+              </dl>
+            </div>
+            <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">28 days unexplained</span>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <!-- <div class="col-4">
+          <div class="card h-100 bg-body-tertiary shadow-sm rounded-0 position-relative">
+            <div class="card-body p-4 pb-5">
+              <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition,Fintech</p>
+              <dl class="mb-0">
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                  <dt class="fw-normal">Meta claim</dt>
+                  <dd class="font-monospace mb-0">7-day window</dd>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                  <dt class="fw-normal">Measured lookback window</dt>
+                  <dd class="font-monospace mb-0">2 day</dd>
+                </div>
+              </dl>
+            </div>
+            <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">28 days unexplained</span>
+          </div>
+        </div> -->
+        <!-- Card 3 -->
+        <div class="col-5">
+          <div class="card h-100 bg-body-tertiary shadow-sm rounded-0 position-relative">
+            <div class="card-body p-4 pb-5">
+              <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition, Chat USD-MXN </p>
+              <dl class="mb-0">
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                  <dt class="fw-normal">Default claim</dt>
+                  <dd class="font-monospace mb-0">30-day window</dd>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                  <dt class="fw-normal">Measured lookback window</dt>
+                  <dd class="font-monospace mb-0">1 day</dd>
+                </div>
+              </dl>
+            </div>
+            <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">29 days unexplained</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="the-math-xl" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">What we actually audit.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Let us audit your traffic behavior and map the correct install attribution window, view-through attribution window, and re-engagement attribution window.</p>
+        <p class="text-body-secondary mb-4">Every one of those windows feeds straight into your reported ROAS. Inflate the numerator with overcounted conversions, and your ROAS is wrong by the same margin &mdash; not once, but every reporting period.</p>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <div class="d-flex align-items-center gap-2 fw-medium small mb-2">Conversion lookback window <span class="badge rounded-pill border border-secondary text-body-secondary fst-italic fw-normal">i</span></div>
+        <div class="d-flex align-items-center gap-3 mb-4 small text-body-secondary">
+          <span>Hours</span>
+          <span class="d-inline-flex align-items-center gap-2 text-body"><span class="d-inline-block rounded-circle border border-3 border-primary p-1"></span>Days</span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small mb-3">
+          <span class="text-primary">Measured: 1 day</span><span class="text-danger">Platform claim: 30 days</span>
+        </div>
+        <div class="position-relative mx-2">
+          <div class="border-top border-2 border-danger border-opacity-50"></div>
+          <span class="position-absolute top-50 start-0 translate-middle rounded-circle border border-3 border-primary bg-body p-1"></span>
+          <span class="position-absolute top-50 start-100 translate-middle rounded-circle border border-3 border-danger bg-body p-1"></span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small text-body-secondary mt-3"><span>1</span><span>5</span><span>7</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span></div>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-5 mb-4">This is the one that actually produces the overcounting delta. It's the catch-and-release setting: how long a channel gets to hold a lead before releasing it back to the general pool. Hold too long, and a channel keeps claiming credit for someone who already converted through chat-researched, self-driven demand. Release too early, and whoever touches them next takes the win &mdash; even if it was never really theirs to claim.</p>
+        <p class="small text-body-secondary mb-0">30 days is the common platform default &mdash; shown here, not endorsed here. Your own corridor data already told a different story: some of your review-page lags measured in this conversation ran as short as a single day. There's no universal right answer, only the number that matches how your customers actually behave &mdash; which is exactly what the audit sets, corridor by corridor.</p>
+      </div></div>
+    </div>
+  </section>
+  <section id="how-it-works-xl" class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+      <h2 class="fs-2 mb-4">Your dashboards are both overcounting and undercounting &mdash; just in different places.</h2>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-6 pe-4 py-4 border-end">
+          <p class="small fw-medium text-primary mb-2">What platforms claim</p>
+          <p>Every ad platform runs on a fixed lookback window, set once, for every advertiser, regardless of how their customers actually decide.</p>
+          <ul class="list-unstyled small text-body-secondary mb-3">
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Meta &mdash; default click window</span><span class="font-monospace text-body text-nowrap">7 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Google Ads &mdash; default, new Search/Display</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Apple Search Ads &mdash; tap-through window</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+          </ul>
+          <p class="small text-body-secondary mb-0">Across the platforms and corridors we've measured, the real lag between a click and a conversion sits far closer to zero than any of these defaults &mdash; which means a real share of "attributed" credit is being claimed for conversions that would have happened anyway.</p>
+        </div>
+        <div class="col-6 ps-4 py-4">
+          <p class="small fw-medium text-danger mb-2">What nobody claims</p>
+          <p>In the businesses we've analyzed, well over half of all downloads and in-app conversions can't be traced to a single ad click at all.</p>
+          <p class="small text-body-secondary mb-0">A growing share of that gap starts before anyone opens an app &mdash; someone researching a decision in ChatGPT, Claude, or Gemini, then acting on it days later. No ad platform sees that conversation. No MMP tags it. We measure it directly, corridor by corridor, from real conversion data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+      <h2 class="fs-2 mb-4">Not a black box. Not a percentage of your ad spend.</h2>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-4 pe-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Flat fee</h3>
+          <p class="small text-body-secondary mb-0">We're not paid a percentage of your media spend, so cutting paid budget doesn't cost us anything. Every dollar you're not overpaying for a conversion that would've happened anyway stays yours, not ours. If the honest answer is "keep spending," that's what we'll say.</p>
+        </div>
+        <div class="col-4 px-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Explainable, not opaque</h3>
+          <p class="small text-body-secondary mb-0">Every number we hand you traces back to a specific, checkable calculation &mdash; not a model you're asked to take on faith. If you can't ask why and get a real answer, we haven't done our job.</p>
+        </div>
+        <div class="col-4 ps-4 py-4">
+          <h3 class="fs-5 mb-2">Both sides of the ledger</h3>
+          <p class="small text-body-secondary mb-0">We don't just show you where paid is overclaiming. We show you where organic and AI-influenced demand is going completely uncounted &mdash; the full picture, not half of it.</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Where we start</h2>
+      <div class="row"><div class="col-7">
+        <p class="text-body-secondary mb-4">Building this vertical by vertical, starting where the decision cycle is measurable and the budget at stake is real.</p>
+      </div></div>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3">
+        <li class="border px-3 py-2 font-monospace small">Remittance &amp; money transfer</li>
+        <li class="border px-3 py-2 font-monospace small">Banking</li>
+        <li class="border px-3 py-2 font-monospace small">Brokerage &amp; investing</li>
+        <li class="border px-3 py-2 font-monospace small">Betting &amp; prediction markets</li>
+        <li class="border px-3 py-2 font-monospace small">E-commerce</li>
+      </ul>
+      <p class="small text-body-secondary mb-0">Next: gaming, travel &amp; navigation, health &amp; fitness, education, utilities.</p>
+    </div>
+  </section> -->
+  <section id="for-agencies-xl" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">A measurement partner, not a threat</h2>
+      <div class="row"><div class="col-10">
+        <p>Full-service or paid-media-only, we work with agencies the same way we work with advertisers directly &mdash; as an independent measurement layer, not competition for the budget. It's the same zero-sum game you already play. You rebalance between Google and Meta every quarter based on what's actually converting. We're not asking you to do something new &mdash; we're adding unattributed as one more column in a reallocation you already run.</p>
+        <p class="text-body-secondary mb-4">And it's a capability you can bring to your own client relationships &mdash; an independent finding your client's finance team can't dispute, because it didn't come from the agency managing the spend.</p>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-3 pe-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Direction</h3>
+          <p class="small text-body-secondary mb-0">Which way the mix should move. What one engagement answers.</p>
+        </div>
+        <div class="col-3 px-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Speed</h3>
+          <p class="small text-body-secondary mb-0">How fast you can move it without spooking a board watching this quarter's number.</p>
+        </div>
+        <div class="col-3 ps-4 py-4">
+          <h3 class="fs-5 mb-2">Velocity</h3>
+          <p class="small text-body-secondary mb-0">Whether you're moving fast enough &mdash; a competitor already capturing the demand you're still deciding whether to chase makes standing still a decision too.</p>
+        </div>
+      </div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-4 mb-0">Direction is a report. Speed and velocity are a relationship &mdash; which is why agencies that bring us in once tend to keep us on.</p>
+      </div></div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row g-0 border-top pt-4">
+        <div class="col-6 pe-4">
+        <h2 class="fs-2 mb-3">In progress, on purpose</h2>
+        <p class="text-body-secondary mb-0">Currently running a live measurement pilot with a global remittance provider, testing this against a real budget decision &mdash; not a backtest.</p>
+        </div>
+        <div class="col-6 ps-4">
+        <p class="text-body-secondary mb-0">Every recommendation is validated with a scoped, reversible test before it touches a live budget. We'd rather be slow and right than fast and wrong about someone else's spend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+   -->
+   <section id="setup-lift-xl" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Setup lift, compared.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">What each approach asks of your team before you get a first answer. No new pixels, no warehouse connection, no waiting for fresh data: we work from the history you already have.</p>
+      </div></div>
+      <div class="row"><div class="col-8">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="small fw-semibold text-body-secondary border-dark">Task</th><th class="small fw-semibold text-danger border-dark">Typical attribution platform</th><th class="small fw-semibold text-primary border-dark">Mixed Signals Delta Check</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New tracking code (CNAME, pixel)</td><td class="small text-danger">Required &middot; Dev/IT, Marketing Ops</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Data warehouse connection</td><td class="small text-danger">Required &middot; Data engineering</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Campaign tracking cleanup</td><td class="small text-danger">Required &middot; Marketing + agencies</td><td class="small text-primary fw-medium">None, we use what you have</td></tr>
+            <tr><td>Ad platform and MMP data</td><td class="small text-danger">Account authentication</td><td class="small text-primary fw-medium">Report exports you already run</td></tr>
+            <tr><td>Conversion data</td><td class="small text-danger">Ongoing batch file feed</td><td class="small text-primary fw-medium">One export of receipts</td></tr>
+            <tr><td>AI-chat signal</td><td class="small text-danger">Not part of setup</td><td class="small text-primary fw-medium">One server log export</td></tr>
+            <tr><td>Waiting for clean data</td><td class="small text-danger">Yes, while new tracking collects</td><td class="small text-primary fw-medium">None, uses your existing history</td></tr>
+            <tr><td>Time to first answer</td><td class="small text-danger">Setup, then data collection</td><td class="small text-primary fw-medium">About 5&ndash;6 weeks, end to end</td></tr>
+            <tr><td class="border-dark">Price</td><td class="small text-danger border-dark">Platform subscription, quoted</td><td class="small text-primary fw-medium border-dark">$2,500, fixed</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+      <p class="small text-body-secondary mt-3 mb-0">Typical setup for pixel-based attribution platforms. Requirements vary by vendor.</p>
+    </div>
+  </section>
+  <section id="delta-check-xl" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Proof of concept.</h2>
+      <p class="text-body-secondary mb-4">One month of attributed and unattributed transaction data<span class="font-monospace text-body">&nbsp;$2,500</span>&nbsp;&nbsp;fixed, agreed before we start.</p>
+      <div class="row g-0 border-top">
+        <div class="col-4 pe-4 py-4 border-end">
+          <p class="small fw-medium text-danger mb-2">Data gathering &mdash; expectation-managed</p>
+          <p class="mb-0">2&ndash;3 weeks, typically. Getting real transaction data out of a corporate entity is never instant &mdash; it depends on your team's turnaround, not ours. We send the reminders. You won't have to chase us.</p>
+        </div>
+        <div class="col-4 ps-4 py-4">
+          <p class="small fw-medium mb-2">Analysis &mdash; firm commitment</p>
+          <p class="mb-0">15 business days, starting the day we have your data in hand. This part is entirely in our control, so it's the part we're willing to guarantee.</p>
+        </div>
+      </div>
+      <div class="row"><div class="col-8">
+        <p class="small text-body-secondary mt-4 mb-4">What you get at the end: your real overcounting delta, in writing, with the math shown. No retainer. No year-long commitment. If the honest answer is "there's nothing here," you'll know that for a small, fixed fee &mdash; not a guess you paid a year for.</p>
+      </div></div>
+      <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-xl">Start your POC</a>
+    </div>
+  </section>
+  <section id="contact-xl" class="bg-dark text-light py-5">
+    <div class="container">
+      <div class="row"><div class="col-8">
+        <h2 class="fs-2 text-light mb-3">Let's look at your numbers.</h2>
+        <p class="text-light text-opacity-75 mb-4">If you manage paid and organic together and have never gotten a straight answer about which is actually working, that's the conversation.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-light text-dark rounded-1 px-4 py-2" href="mailto:hello@mixedsignals.com">Email us</a>
+          <span class="font-monospace small text-light text-opacity-75">or find us on LinkedIn</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <footer class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap gap-2 small text-body-secondary">
+        <span>Mixed Signals</span>
+        <span>Attribution, audited.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- end XL (1200px and wider) -->
+
+<!-- ======================================================================
+     LARGE (992PX TO 1199PX)
+     Shown only at this screen size (d-none d-lg-block d-xl-none). Edit the content here
+     to tailor it for this size; the other parts are not affected.
+     ====================================================================== -->
+<div class="d-none d-lg-block d-xl-none">
+  <header class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="lh-sm">
+          <span class="h5 fw-semibold d-block mb-0">Mixed Signals</span>
+          <span class="small text-body-secondary">Attribution, audited</span>
+        </div>
+        <a class="btn bg-dark text-light rounded-1 px-3" href="#contact-lg">Get in touch</a>
+      </div>
+    </div>
+  </header>
+  <section class="py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+        <h1 class="display-6 fw-medium lh-sm">Add up your attributed and unattributed conversions.</h1>
+        <h3 class="display-6 fw-medium lh-sm"> Compare with Actual receipts. see the delta!</h3>
+        <h3 class="display-6 fw-medium lh-sm">  is this a Multi Touch Attribution blindspot?</h6>
+        <h4 class="fs-3 lh-sm mb-auto">Tweak your Lookback Period & minimize conversion delta</h4>
+        <section class="py-2"> </section>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-lg">Get in touch</a>
+          <a class="link-dark link-underline-opacity-0 fw-medium" href="#how-it-works-lg">See how it works</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="channel-map-lg" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Every channel, mapped.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Before we show you the delta, here's where every channel actually sits &mdash; attribution window and funnel stage, no guessing.</p>
+      </div></div>
+      <div class="row"><div class="col-9">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="fw-normal small text-body-secondary border-dark">Channel</th><th class="fw-normal small text-body-secondary border-dark">Lookback</th><th class="fw-normal small text-body-secondary border-dark">Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Search Ads</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Apple Search Ads</td><td class="font-monospace small text-body-secondary">30-day tap-through</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Meta Ads</td><td class="font-monospace small text-body-secondary">1-day view, 7-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Snap Ads</td><td class="font-monospace small text-body-secondary">1-day view, 28-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Email</td><td class="font-monospace small text-body-secondary">1-day view, 10-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Blog post visit</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Top</td></tr>
+            <tr><td class="text-danger fw-medium pt-4 border-dark">Unattributed (organic, self-driven) visitor</td><td class="pt-4 border-dark"></td><td class="text-primary pt-4 border-dark">sliding scale</td></tr>
+            <tr><td class="fw-medium">Same session conversion</td><td class="font-monospace small text-danger">1-day view, 1-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 2 days</td><td class="font-monospace small text-danger">1-day view, 2-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 3 days</td><td class="font-monospace small text-danger">1-day view, 3-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium border-dark">Conversion in 4 to 7 days</td><td class="font-monospace small text-danger border-dark">1-day view, 4&ndash;7-day click</td><td class="text-danger border-dark">High-intent, late-stage</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section class="border-top py-5">
+    <div class="container">
+      <div class="row g-4 mb-3">
+        <div class="col-5">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-4 pb-5">
+            <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition, Auto Loan</p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fw-normal">Platform claim</dt>
+                <dd class="font-monospace mb-0">30-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fw-normal">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">4 day</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">26 days unexplained</span>
+        </div>
+      </div>
+        <!-- card 2-->
+    <div class="col-5"> 
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-4 pb-5">
+            <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition, USD-MXN</p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fw-normal">Platform claim</dt>
+                <dd class="font-monospace mb-0">7-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fw-normal">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">2 day</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">28 days unexplained</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  <section id="the-math-lg" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">What we actually audit.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Let us audit your traffic behavior and map the correct install attribution window, view-through attribution window, and re-engagement attribution window.</p>
+        <p class="text-body-secondary mb-4">Every one of those windows feeds straight into your reported ROAS. Inflate the numerator with overcounted conversions, and your ROAS is wrong by the same margin &mdash; not once, but every reporting period.</p>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <div class="d-flex align-items-center gap-2 fw-medium small mb-2">Conversion lookback window <span class="badge rounded-pill border border-secondary text-body-secondary fst-italic fw-normal">i</span></div>
+        <div class="d-flex align-items-center gap-3 mb-4 small text-body-secondary">
+          <span>Hours</span>
+          <span class="d-inline-flex align-items-center gap-2 text-body"><span class="d-inline-block rounded-circle border border-3 border-primary p-1"></span>Days</span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small mb-3">
+          <span class="text-primary">Measured: 1 day</span><span class="text-danger">Platform claim: 30 days</span>
+        </div>
+        <div class="position-relative mx-2">
+          <div class="border-top border-2 border-danger border-opacity-50"></div>
+          <span class="position-absolute top-50 start-0 translate-middle rounded-circle border border-3 border-primary bg-body p-1"></span>
+          <span class="position-absolute top-50 start-100 translate-middle rounded-circle border border-3 border-danger bg-body p-1"></span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small text-body-secondary mt-3"><span>1</span><span>5</span><span>7</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span></div>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-5 mb-4">This is the one that actually produces the overcounting delta. It's the catch-and-release setting: how long a channel gets to hold a lead before releasing it back to the general pool. Hold too long, and a channel keeps claiming credit for someone who already converted through chat-researched, self-driven demand. Release too early, and whoever touches them next takes the win &mdash; even if it was never really theirs to claim.</p>
+        <p class="small text-body-secondary mb-0">30 days is the common platform default &mdash; shown here, not endorsed here. Your own corridor data already told a different story: some of your review-page lags measured in this conversation ran as short as a single day. There's no universal right answer, only the number that matches how your customers actually behave &mdash; which is exactly what the audit sets, corridor by corridor.</p>
+      </div></div>
+    </div>
+  </section>
+  <section id="how-it-works-lg" class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+      <h2 class="fs-2 mb-4">Your dashboards are both overcounting and undercounting &mdash; just in different places.</h2>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-5 pe-4 py-4 border-end">
+          <p class="small fw-medium text-primary mb-2">What platforms claim</p>
+          <p>Every ad platform runs on a fixed lookback window, set once, for every advertiser, regardless of how their customers actually decide.</p>
+          <ul class="list-unstyled small text-body-secondary mb-3">
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Meta &mdash; default click window</span><span class="font-monospace text-body text-nowrap">7 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Google Ads &mdash; default, new Search/Display</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Apple Search Ads &mdash; tap-through window</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+          </ul>
+          <p class="small text-body-secondary mb-0">Across the platforms and corridors we've measured, the real lag between a click and a conversion sits far closer to zero than any of these defaults &mdash; which means a real share of "attributed" credit is being claimed for conversions that would have happened anyway.</p>
+        </div>
+        <div class="col-5 ps-4 py-4">
+          <p class="small fw-medium text-danger mb-2">What nobody claims</p>
+          <p>In the businesses we've analyzed, well over half of all downloads and in-app conversions can't be traced to a single ad click at all.</p>
+          <p class="small text-body-secondary mb-0">A growing share of that gap starts before anyone opens an app &mdash; someone researching a decision in ChatGPT, Claude, or Gemini, then acting on it days later. No ad platform sees that conversation. No MMP tags it. We measure it directly, corridor by corridor, from real conversion data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ <!--  <section class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+      <h2 class="fs-2 mb-4">Not a black box. Not a percentage of your ad spend.</h2>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-3 pe-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Flat fee</h3>
+          <p class="small text-body-secondary mb-0">We're not paid a percentage of your media spend, so cutting paid budget doesn't cost us anything. Every dollar you're not overpaying for a conversion that would've happened anyway stays yours, not ours. If the honest answer is "keep spending," that's what we'll say.</p>
+        </div>
+        <div class="col-3 px-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Explainable, not opaque</h3>
+          <p class="small text-body-secondary mb-0">Every number we hand you traces back to a specific, checkable calculation &mdash; not a model you're asked to take on faith. If you can't ask why and get a real answer, we haven't done our job.</p>
+        </div>
+        <div class="col-3 ps-4 py-4">
+          <h3 class="fs-5 mb-2">Both sides of the ledger</h3>
+          <p class="small text-body-secondary mb-0">We don't just show you where paid is overclaiming. We show you where organic and AI-influenced demand is going completely uncounted &mdash; the full picture, not half of it.</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Where we start</h2>
+      <div class="row"><div class="col-8">
+        <p class="text-body-secondary mb-4">Building this vertical by vertical, starting where the decision cycle is measurable and the budget at stake is real.</p>
+      </div></div>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3">
+        <li class="border px-3 py-2 font-monospace small">Remittance &amp; money transfer</li>
+        <li class="border px-3 py-2 font-monospace small">Banking</li>
+        <li class="border px-3 py-2 font-monospace small">Brokerage &amp; investing</li>
+        <li class="border px-3 py-2 font-monospace small">Betting &amp; prediction markets</li>
+        <li class="border px-3 py-2 font-monospace small">E-commerce</li>
+      </ul>
+      <p class="small text-body-secondary mb-0">Next: gaming, travel &amp; navigation, health &amp; fitness, education, utilities.</p>
+    </div>
+  </section> -->
+  <section id="for-agencies-lg" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">A measurement partner, not a threat</h2>
+      <div class="row"><div class="col-8">
+        <p>Full-service or paid-media-only, we work with agencies the same way we work with advertisers directly &mdash; as an independent measurement layer, not competition for the budget. It's the same zero-sum game you already play. You rebalance between Google and Meta every quarter based on what's actually converting. We're not asking you to do something new &mdash; we're adding unattributed as one more column in a reallocation you already run.</p>
+        <p class="text-body-secondary mb-4">And it's a capability you can bring to your own client relationships &mdash; an independent finding your client's finance team can't dispute, because it didn't come from the agency managing the spend.</p>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-3 pe-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Direction</h3>
+          <p class="small text-body-secondary mb-0">Which way the mix should move. What one engagement answers.</p>
+        </div>
+        <div class="col-3 px-4 py-4 border-end">
+          <h3 class="fs-5 mb-2">Speed</h3>
+          <p class="small text-body-secondary mb-0">How fast you can move it without spooking a board watching this quarter's number.</p>
+        </div>
+        <div class="col-3 ps-4 py-4">
+          <h3 class="fs-5 mb-2">Velocity</h3>
+          <p class="small text-body-secondary mb-0">Whether you're moving fast enough &mdash; a competitor already capturing the demand you're still deciding whether to chase makes standing still a decision too.</p>
+        </div>
+      </div>
+      <div class="row"><div class="col-8">
+        <p class="small text-body-secondary mt-4 mb-0">Direction is a report. Speed and velocity are a relationship &mdash; which is why agencies that bring us in once tend to keep us on.</p>
+      </div></div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row g-0 border-top pt-4">
+        <div class="col-6 pe-4">
+        <h2 class="fs-2 mb-3">In progress, on purpose</h2>
+        <p class="text-body-secondary mb-0">Currently running a live measurement pilot with a global remittance provider, testing this against a real budget decision &mdash; not a backtest.</p>
+        </div>
+        <div class="col-6 ps-4">
+        <p class="text-body-secondary mb-0">Every recommendation is validated with a scoped, reversible test before it touches a live budget. We'd rather be slow and right than fast and wrong about someone else's spend.</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <section id="setup-lift-lg" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Setup lift, compared.</h2>
+      <div class="row"><div class="col-8">
+        <p class="text-body-secondary mb-4">What each approach asks of your team before you get a first answer. No new pixels, no warehouse connection, no waiting for fresh data: we work from the history you already have.</p>
+      </div></div>
+      <div class="row"><div class="col-9">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="small fw-semibold text-body-secondary border-dark">Task</th><th class="small fw-semibold text-danger border-dark">Typical attribution platform</th><th class="small fw-semibold text-primary border-dark">Mixed Signals Delta Check</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New tracking code (CNAME, pixel)</td><td class="small text-danger">Required &middot; Dev/IT, Marketing Ops</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Data warehouse connection</td><td class="small text-danger">Required &middot; Data engineering</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Campaign tracking cleanup</td><td class="small text-danger">Required &middot; Marketing + agencies</td><td class="small text-primary fw-medium">None, we use what you have</td></tr>
+            <tr><td>Ad platform and MMP data</td><td class="small text-danger">Account authentication</td><td class="small text-primary fw-medium">Report exports you already run</td></tr>
+            <tr><td>Conversion data</td><td class="small text-danger">Ongoing batch file feed</td><td class="small text-primary fw-medium">One export of receipts</td></tr>
+            <tr><td>AI-chat signal</td><td class="small text-danger">Not part of setup</td><td class="small text-primary fw-medium">One server log export</td></tr>
+            <tr><td>Waiting for clean data</td><td class="small text-danger">Yes, while new tracking collects</td><td class="small text-primary fw-medium">None, uses your existing history</td></tr>
+            <tr><td>Time to first answer</td><td class="small text-danger">Setup, then data collection</td><td class="small text-primary fw-medium">About 5&ndash;6 weeks, end to end</td></tr>
+            <tr><td class="border-dark">Price</td><td class="small text-danger border-dark">Platform subscription, quoted</td><td class="small text-primary fw-medium border-dark">$2,500, fixed</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+      <p class="small text-body-secondary mt-3 mb-0">Typical setup for pixel-based attribution platforms. Requirements vary by vendor.</p>
+    </div>
+  </section>
+  <section id="delta-check-lg" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-2 mb-4">Proof of concept.</h2>
+      <p class="text-body-secondary mb-4">One month of attributed and unattributed transactions data<span class="font-monospace text-body">$2,500</span>&nbsp; fixed, agreed before we start.</p>
+      <div class="row g-0 border-top">
+        <div class="col-4 pe-4 py-4 border-end">
+          <p class="small fw-medium text-danger mb-2">Data gathering &mdash; expectation-managed</p>
+          <p class="mb-0">2&ndash;3 weeks, typically. Getting real transaction data out of a corporate entity is never instant &mdash; it depends on your team's turnaround, not ours. We send the reminders. You won't have to chase us.</p>
+        </div>
+        <div class="col-4 ps-4 py-4">
+          <p class="small fw-medium mb-2">Analysis &mdash; firm commitment</p>
+          <p class="mb-0">15 business days, starting the day we have your data in hand. This part is entirely in our control, so it's the part we're willing to guarantee.</p>
+        </div>
+      </div>
+      <div class="row"><div class="col-8">
+        <p class="small text-body-secondary mt-4 mb-4">What you get at the end: your real overcounting delta, in writing, with the math shown. No retainer. No year-long commitment. If the honest answer is "there's nothing here," you'll know that for a small, fixed fee &mdash; not a guess you paid a year for.</p>
+      </div></div>
+      <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-lg">Start your POC</a>
+    </div>
+  </section>
+  <section id="contact-lg" class="bg-dark text-light py-5">
+    <div class="container">
+      <div class="row"><div class="col-8">
+        <h2 class="fs-2 text-light mb-3">Let's look at your numbers.</h2>
+        <p class="text-light text-opacity-75 mb-4">If you manage paid and organic together and have never gotten a straight answer about which is actually working, that's the conversation.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-light text-dark rounded-1 px-4 py-2" href="mailto:hello@mixedsignals.com">Email us</a>
+          <span class="font-monospace small text-light text-opacity-75">or find us on LinkedIn</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <footer class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap gap-2 small text-body-secondary">
+        <span>Mixed Signals</span>
+        <span>Attribution, audited.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- end Large (992px to 1199px) -->
+
+<!-- ======================================================================
+     MEDIUM (768PX TO 991PX)
+     Shown only at this screen size (d-none d-md-block d-lg-none). Edit the content here
+     to tailor it for this size; the other parts are not affected.
+     ====================================================================== -->
+<div class="d-none d-md-block d-lg-none">
+  <header class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="lh-sm">
+          <span class="h5 fw-semibold d-block mb-0">Mixed Signals</span>
+          <span class="small text-body-secondary">Attribution, audited</span>
+        </div>
+        <a class="btn bg-dark text-light rounded-1 px-3" href="#contact-md">Get in touch</a>
+      </div>
+    </div>
+  </header>
+  <section class="py-3">
+    <div class="container">
+      <div class="row"><div class="col-12">
+        <h1 class="fw-sm lh-1 mb-1 fs-1"> Add attributed &#38; unattributed conversions</h1>  
+        <h2 class="fw-medium lh-sm mb-2">Compare to your actual receipts. see the <em class="text-danger"> delta!</em></h2>
+        <h2 class="fw-medium lh-sm mb-2">is this a multi touch attribution blindspot!</h2>
+        <p class="fs-5 text-body-secondary mb-2">Tweak your lookback period & minimize your conversion delta</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-md">Get in touch</a>
+          <a class="link-dark link-underline-opacity-0 fw-medium" href="#how-it-works-md">See how it works</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="channel-map-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Every channel, mapped.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Before we show you the delta, here's where every channel actually sits &mdash; attribution window and funnel stage, no guessing.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="fw-normal small text-body-secondary border-dark">Channel</th><th class="fw-normal small text-body-secondary border-dark">Lookback</th><th class="fw-normal small text-body-secondary border-dark">Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Search Ads</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Apple Search Ads</td><td class="font-monospace small text-body-secondary">30-day tap-through</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Meta Ads</td><td class="font-monospace small text-body-secondary">1-day view, 7-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Snap Ads</td><td class="font-monospace small text-body-secondary">1-day view, 28-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Email</td><td class="font-monospace small text-body-secondary">1-day view, 10-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Blog post visit</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Top</td></tr>
+            <tr><td class="text-danger fw-medium pt-4 border-dark">Unattributed (organic, self-driven) visitor</td><td class="pt-4 border-dark"></td><td class="text-primary pt-4 border-dark">sliding scale</td></tr>
+            <tr><td class="fw-medium">Same session conversion</td><td class="font-monospace small text-danger">1-day view, 1-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 2 days</td><td class="font-monospace small text-danger">1-day view, 2-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 3 days</td><td class="font-monospace small text-danger">1-day view, 3-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium border-dark">Conversion in 4 to 7 days</td><td class="font-monospace small text-danger border-dark">1-day view, 4&ndash;7-day click</td><td class="text-danger border-dark">High-intent, late-stage</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section class="border-top py-4">
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-2 pb-2">
+            <p class="small text-body-secondary mb-2">Audit note &mdash; New customer,USD-INR Remittance </p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fw-normal">Platform claim</dt>
+                <dd class="font-monospace mb-0">30-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fw-normal">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">3 days</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">27 days unexplained</span>
+        </div>
+      </div>
+    <!-- card 2-->
+          
+        <div class="col-6">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-2 pb-2">
+            <p class="small text-body-secondary mb-2">Audit note &mdash; New customer,USD-MXN Remittance </p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fw-normal">Platform claim</dt>
+                <dd class="font-monospace mb-0">30-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fw-normal">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">5 day</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">25 days unexplained</span>
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </section>
+ 
+  <section id="the-math-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">What we actually audit.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Let us audit your traffic behavior and map the correct install attribution window, view-through attribution window, and re-engagement attribution window.</p>
+        <p class="text-body-secondary mb-4">Every one of those windows feeds straight into your reported ROAS. Inflate the numerator with overcounted conversions, and your ROAS is wrong by the same margin &mdash; not once, but every reporting period.</p>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <div class="d-flex align-items-center gap-2 fw-medium small mb-2">Conversion lookback window <span class="badge rounded-pill border border-secondary text-body-secondary fst-italic fw-normal">i</span></div>
+        <div class="d-flex align-items-center gap-3 mb-4 small text-body-secondary">
+          <span>Hours</span>
+          <span class="d-inline-flex align-items-center gap-2 text-body"><span class="d-inline-block rounded-circle border border-3 border-primary p-1"></span>Days</span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small mb-3">
+          <span class="text-primary">Measured: 1 day</span><span class="text-danger">Platform claim: 30 days</span>
+        </div>
+        <div class="position-relative mx-2">
+          <div class="border-top border-2 border-danger border-opacity-50"></div>
+          <span class="position-absolute top-50 start-0 translate-middle rounded-circle border border-3 border-primary bg-body p-1"></span>
+          <span class="position-absolute top-50 start-100 translate-middle rounded-circle border border-3 border-danger bg-body p-1"></span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small text-body-secondary mt-3"><span>1</span><span>5</span><span>7</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span></div>
+      </div></div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-5 mb-4">This is the one that actually produces the overcounting delta. It's the catch-and-release setting: how long a channel gets to hold a lead before releasing it back to the general pool. Hold too long, and a channel keeps claiming credit for someone who already converted through chat-researched, self-driven demand. Release too early, and whoever touches them next takes the win &mdash; even if it was never really theirs to claim.</p>
+        <p class="small text-body-secondary mb-0">30 days is the common platform default &mdash; shown here, not endorsed here. Your own corridor data already told a different story: some of your review-page lags measured in this conversation ran as short as a single day. There's no universal right answer, only the number that matches how your customers actually behave &mdash; which is exactly what the audit sets, corridor by corridor.</p>
+      </div></div>
+    </div>
+  </section>
+  <section id="how-it-works-md" class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+      <h2 class="fs-3 mb-4">Your dashboards are both overcounting and undercounting &mdash; just in different places.</h2>
+      </div></div>
+      <div class="row g-0 border-top">
+        <div class="col-6 pe-4 py-4 border-end">
+          <p class="small fw-medium text-primary mb-2">What platforms claim</p>
+          <p>Every ad platform runs on a fixed lookback window, set once, for every advertiser, regardless of how their customers actually decide.</p>
+          <ul class="list-unstyled small text-body-secondary mb-3">
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Meta &mdash; default click window</span><span class="font-monospace text-body text-nowrap">7 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Google Ads &mdash; default, new Search/Display</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Apple Search Ads &mdash; tap-through window</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+          </ul>
+          <p class="small text-body-secondary mb-0">Across the platforms and corridors we've measured, the real lag between a click and a conversion sits far closer to zero than any of these defaults &mdash; which means a real share of "attributed" credit is being claimed for conversions that would have happened anyway.</p>
+        </div>
+        <div class="col-6 ps-4 py-4">
+          <p class="small fw-medium text-danger mb-2">What nobody claims</p>
+          <p>In the businesses we've analyzed, well over half of all downloads and in-app conversions can't be traced to a single ad click at all.</p>
+          <p class="small text-body-secondary mb-0">A growing share of that gap starts before anyone opens an app &mdash; someone researching a decision in ChatGPT, Claude, or Gemini, then acting on it days later. No ad platform sees that conversation. No MMP tags it. We measure it directly, corridor by corridor, from real conversion data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+      <h2 class="fs-3 mb-4">Not a black box. Not a percentage of your ad spend.</h2>
+      </div></div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Flat fee</h3>
+        <p class="small text-body-secondary mb-0">We're not paid a percentage of your media spend, so cutting paid budget doesn't cost us anything. Every dollar you're not overpaying for a conversion that would've happened anyway stays yours, not ours. If the honest answer is "keep spending," that's what we'll say.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Explainable, not opaque</h3>
+        <p class="small text-body-secondary mb-0">Every number we hand you traces back to a specific, checkable calculation &mdash; not a model you're asked to take on faith. If you can't ask why and get a real answer, we haven't done our job.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Both sides of the ledger</h3>
+        <p class="small text-body-secondary mb-0">We don't just show you where paid is overclaiming. We show you where organic and AI-influenced demand is going completely uncounted &mdash; the full picture, not half of it.</p>
+      </div>
+    </div>
+  </section>
+  <section class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Where we start</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">Building this vertical by vertical, starting where the decision cycle is measurable and the budget at stake is real.</p>
+      </div></div>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3">
+        <li class="border px-3 py-2 font-monospace small">Remittance &amp; money transfer</li>
+        <li class="border px-3 py-2 font-monospace small">Banking</li>
+        <li class="border px-3 py-2 font-monospace small">Brokerage &amp; investing</li>
+        <li class="border px-3 py-2 font-monospace small">Betting &amp; prediction markets</li>
+        <li class="border px-3 py-2 font-monospace small">E-commerce</li>
+      </ul>
+      <p class="small text-body-secondary mb-0">Next: gaming, travel &amp; navigation, health &amp; fitness, education, utilities.</p>
+    </div>
+  </section>
+ -->  
+ <section id="for-agencies-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">A measurement partner, not a threat</h2>
+      <div class="row"><div class="col-10">
+        <p>Full-service or paid-media-only, we work with agencies the same way we work with advertisers directly &mdash; as an independent measurement layer, not competition for the budget. It's the same zero-sum game you already play. You rebalance between Google and Meta every quarter based on what's actually converting. We're not asking you to do something new &mdash; we're adding unattributed as one more column in a reallocation you already run.</p>
+        <p class="text-body-secondary mb-4">And it's a capability you can bring to your own client relationships &mdash; an independent finding your client's finance team can't dispute, because it didn't come from the agency managing the spend.</p>
+      </div></div>
+      <div class="row g-0 border-top">
+      <div class="border-top py-4 px-3 col-3">
+        <h3 class="fs-5 mb-2">Direction</h3>
+        <p class="small text-body-secondary mb-0">Which way the mix should move. What one engagement answers.</p>
+      </div>
+      <div class="border-top py-4 px-3 col-3">
+        <h3 class="fs-5 mb-2">Speed</h3>
+        <p class="small text-body-secondary mb-0">How fast you can move it without spooking a board watching this quarter's number.</p>
+      </div>
+      <div class="border-top py-4 px-3 col-3">
+        <h3 class="fs-5 mb-2">Velocity</h3>
+        <p class="small text-body-secondary mb-0">Whether you're moving fast enough &mdash; a competitor already capturing the demand you're still deciding whether to chase makes standing still a decision too.</p>
+      </div>
+    </div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-4 mb-0">Direction is a report. Speed and velocity are a relationship &mdash; which is why agencies that bring us in once tend to keep us on.</p>
+      </div></div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row g-0 border-top pt-4">
+        <div class="col-6 pe-4">
+        <h2 class="fs-3 mb-3">In progress, on purpose</h2>
+        <p class="text-body-secondary mb-0">Currently running a live measurement pilot with a global remittance provider, testing this against a real budget decision &mdash; not a backtest.</p>
+        </div>
+        <div class="col-6 ps-4">
+        <p class="text-body-secondary mb-0">Every recommendation is validated with a scoped, reversible test before it touches a live budget. We'd rather be slow and right than fast and wrong about someone else's spend.</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <section id="setup-lift-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Setup lift, compared.</h2>
+      <div class="row"><div class="col-10">
+        <p class="text-body-secondary mb-4">What each approach asks of your team before you get a first answer. No new pixels, no warehouse connection, no waiting for fresh data: we work from the history you already have.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="small fw-semibold text-body-secondary border-dark">Task</th><th class="small fw-semibold text-danger border-dark">Typical attribution platform</th><th class="small fw-semibold text-primary border-dark">Mixed Signals POC</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New tracking code (CNAME, pixel)</td><td class="small text-danger">Required &middot; Dev/IT, Marketing Ops</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Data warehouse connection</td><td class="small text-danger">Required &middot; Data engineering</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Campaign tracking cleanup</td><td class="small text-danger">Required &middot; Marketing + agencies</td><td class="small text-primary fw-medium">None, we use what you have</td></tr>
+            <tr><td>Ad platform and MMP data</td><td class="small text-danger">Account authentication</td><td class="small text-primary fw-medium">Report exports you already run</td></tr>
+            <tr><td>Conversion data</td><td class="small text-danger">Ongoing batch file feed</td><td class="small text-primary fw-medium">One export of receipts</td></tr>
+            <tr><td>AI-chat signal</td><td class="small text-danger">Not part of setup</td><td class="small text-primary fw-medium">One server log export</td></tr>
+            <tr><td>Waiting for clean data</td><td class="small text-danger">Yes, while new tracking collects</td><td class="small text-primary fw-medium">None, uses your existing history</td></tr>
+            <tr><td>Time to first answer</td><td class="small text-danger">Setup, then data collection</td><td class="small text-primary fw-medium">About 5&ndash;6 weeks, end to end</td></tr>
+            <tr><td class="border-dark">Price</td><td class="small text-danger border-dark">Platform subscription, quoted</td><td class="small text-primary fw-medium border-dark">$2,500, fixed</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+      <p class="small text-body-secondary mt-3 mb-0">Typical setup for pixel-based attribution platforms. Requirements vary by vendor.</p>
+    </div>
+  </section>
+  <section id="delta-check-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Proof of concept</h2>
+      <p class="text-body-secondary mb-4">One month data (attribution & conversion data) <span class="font-monospace text-body">&#173;$2,500</span>, fixed, agreed before we start.</p>
+      <div class="row g-0 border-top">
+        <div class="col-6 pe-4 py-4 border-end">
+          <p class="small fw-medium text-danger mb-2">Data gathering &mdash; expectation-managed</p>
+          <p class="mb-0">2&ndash;3 weeks, typically. Getting real transaction data out of a corporate entity is never instant &mdash; it depends on your team's turnaround, not ours. We send the reminders. You won't have to chase us.</p>
+        </div>
+        <div class="col-6 ps-4 py-4">
+          <p class="small fw-medium mb-2">Analysis &mdash; firm commitment</p>
+          <p class="mb-0">15 business days, starting the day we have your data in hand. This part is entirely in our control, so it's the part we're willing to guarantee.</p>
+        </div>
+      </div>
+      <div class="row"><div class="col-10">
+        <p class="small text-body-secondary mt-4 mb-4">What you get at the end: your real overcounting delta, in writing, with the math shown. No retainer. No year-long commitment. If the honest answer is "there's nothing here," you'll know that for a small, fixed fee &mdash; not a guess you paid a year for.</p>
+      </div></div>
+      <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-md">Start your POC</a>
+    </div>
+  </section>
+  <section id="contact-md" class="bg-dark text-light py-5">
+    <div class="container">
+      <div class="row"><div class="col-10">
+        <h2 class="fs-3 text-light mb-3">Let's look at your numbers.</h2>
+        <p class="text-light text-opacity-75 mb-4">If you manage paid and organic together and have never gotten a straight answer about which is actually working, that's the conversation.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-light text-dark rounded-1 px-4 py-2" href="mailto:hello@mixedsignals.com">Email us</a>
+          <span class="font-monospace small text-light text-opacity-75">or find us on LinkedIn</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <footer class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap gap-2 small text-body-secondary">
+        <span>Mixed Signals</span>
+        <span>Attribution, audited.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- end Medium (768px to 991px) -->
+
+<!-- ======================================================================
+     SMALL (576PX TO 767PX)
+     Shown only at this screen size (d-none d-sm-block d-md-none). Edit the content here
+     to tailor it for this size; the other parts are not affected.
+     ====================================================================== -->
+<div class="d-none d-sm-block d-md-none">
+  <header class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="lh-1">
+          <span class="h5 fw-semibold d-block mb-0">Mixed Signals</span>
+          <span class="small text-body-secondary">Attribution, audited</span>
+        </div>
+        <a class="btn bg-dark text-light rounded-1 px-3" href="#contact-sm">Get in touch</a>
+      </div>
+    </div>
+  </header>
+  <section class="py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+        <h1 class="fs-3 fw-small lh-medium mb-1">Add attributed + unattributed conversions </h1>
+        <h2 class = "fs-5 fw-small lh-medium mb-1">Compare with actual receipts.see the <em class="text-danger">delta!!</em></h2>
+        <h1 class="fs-4 fw-medium lh-1 mb-1">is this a MTA <strong class="text-warning">blindspot!!</strong></h1>
+        <p class="fs-6 text-body-secondary mb-1">Tweak your lookback period & minimise conversion delta.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-sm">Get in touch</a>
+          <a class="link-dark link-underline-opacity-0 fw-medium" href="#how-it-works-sm">See how it works</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="channel-map-sm" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Every channel, mapped.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Before we show you the delta, here's where every channel actually sits &mdash; attribution window and funnel stage, no guessing.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="border-top border-dark">
+        <table class="table mb-0 small">
+          <thead>
+            <tr><th class="fw-normal small text-body-secondary border-dark">Channel</th><th class="fw-normal small text-body-secondary border-dark">Lookback</th><th class="fw-normal small text-body-secondary border-dark">Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Search Ads</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Apple Search Ads</td><td class="font-monospace small text-body-secondary">30-day tap-through</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Meta Ads</td><td class="font-monospace small text-body-secondary">1-day view, 7-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Snap Ads</td><td class="font-monospace small text-body-secondary">1-day view, 28-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Email</td><td class="font-monospace small text-body-secondary">1-day view, 10-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Blog post visit</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Top</td></tr>
+            <tr><td class="text-danger fw-medium pt-4 border-dark">Unattributed (organic, self-driven) visitor</td><td class="pt-4 border-dark"></td><td class="text-primary pt-4 border-dark">sliding scale</td></tr>
+            <tr><td class="fw-medium">Same session conversion</td><td class="font-monospace small text-danger">1-day view, 1-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 2 days</td><td class="font-monospace small text-danger">1-day view, 2-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 3 days</td><td class="font-monospace small text-danger">1-day view, 3-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium border-dark">Conversion in 4 to 7 days</td><td class="font-monospace small text-danger border-dark">1-day view, 4&ndash;7-day click</td><td class="text-danger border-dark">High-intent, late-stage</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section class="border-top py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-4 pb-5">
+            <p class="small text-body-secondary mb-3">Audit note &mdash; New customer,&nbsp;USD-MXN</p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fs-6">Platform claim</dt>
+                <dd class="font-monospace mb-0">30-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fs-6">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">3 days</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">27 days unexplained</span>
+        </div>
+      </div>
+      
+        <div class="col-6">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-4 pb-5">
+            <p class="fs-6 text-body-secondary mb-3">Audit note &mdash; New customer,&nbsp;USD-INR</p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fs-6">Platform claim</dt>
+                <dd class="font-monospace mb-0">28-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fs-6">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">6 days</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">22 days unexplained</span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <section id="the-math-sm" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">What we actually audit.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Let us audit your traffic behavior and map the correct install attribution window, view-through attribution window, and re-engagement attribution window.</p>
+        <p class="text-body-secondary mb-4">Every one of those windows feeds straight into your reported ROAS. Inflate the numerator with overcounted conversions, and your ROAS is wrong by the same margin &mdash; not once, but every reporting period.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="d-flex align-items-center gap-2 fw-medium small mb-2">Conversion lookback window <span class="badge rounded-pill border border-secondary text-body-secondary fst-italic fw-normal">i</span></div>
+        <div class="d-flex align-items-center gap-3 mb-4 small text-body-secondary">
+          <span>Hours</span>
+          <span class="d-inline-flex align-items-center gap-2 text-body"><span class="d-inline-block rounded-circle border border-3 border-primary p-1"></span>Days</span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small mb-3">
+          <span class="text-primary">Measured: 1 day</span><span class="text-danger">Platform claim: 30 days</span>
+        </div>
+        <div class="position-relative mx-2">
+          <div class="border-top border-2 border-danger border-opacity-50"></div>
+          <span class="position-absolute top-50 start-0 translate-middle rounded-circle border border-3 border-primary bg-body p-1"></span>
+          <span class="position-absolute top-50 start-100 translate-middle rounded-circle border border-3 border-danger bg-body p-1"></span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small text-body-secondary mt-3"><span>1</span><span>5</span><span>7</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span></div>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-5 mb-4">This is the one that actually produces the overcounting delta. It's the catch-and-release setting: how long a channel gets to hold a lead before releasing it back to the general pool. Hold too long, and a channel keeps claiming credit for someone who already converted through chat-researched, self-driven demand. Release too early, and whoever touches them next takes the win &mdash; even if it was never really theirs to claim.</p>
+        <p class="small text-body-secondary mb-0">30 days is the common platform default &mdash; shown here, not endorsed here. Your own corridor data already told a different story: some of your review-page lags measured in this conversation ran as short as a single day. There's no universal right answer, only the number that matches how your customers actually behave &mdash; which is exactly what the audit sets, corridor by corridor.</p>
+      </div></div>
+    </div>
+  </section>
+  <section id="how-it-works-sm" class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+      <h2 class="fs-3 mb-4">Your dashboards are both overcounting and undercounting &mdash; just in different places.</h2>
+      </div></div>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-primary mb-2">What platforms claim</p>
+          <p>Every ad platform runs on a fixed lookback window, set once, for every advertiser, regardless of how their customers actually decide.</p>
+          <ul class="list-unstyled small text-body-secondary mb-3">
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Meta &mdash; default click window</span><span class="font-monospace text-body text-nowrap">7 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Google Ads &mdash; default, new Search/Display</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Apple Search Ads &mdash; tap-through window</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+          </ul>
+          <p class="small text-body-secondary mb-0">Across the platforms and corridors we've measured, the real lag between a click and a conversion sits far closer to zero than any of these defaults &mdash; which means a real share of "attributed" credit is being claimed for conversions that would have happened anyway.</p>
+      </div>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-danger mb-2">What nobody claims</p>
+          <p>In the businesses we've analyzed, well over half of all downloads and in-app conversions can't be traced to a single ad click at all.</p>
+          <p class="small text-body-secondary mb-0">A growing share of that gap starts before anyone opens an app &mdash; someone researching a decision in ChatGPT, Claude, or Gemini, then acting on it days later. No ad platform sees that conversation. No MMP tags it. We measure it directly, corridor by corridor, from real conversion data.</p>
+      </div>
+    </div>
+  </section>
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+      <h2 class="fs-3 mb-4">Not a black box. Not a percentage of your ad spend.</h2>
+      </div></div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Flat fee</h3>
+        <p class="small text-body-secondary mb-0">We're not paid a percentage of your media spend, so cutting paid budget doesn't cost us anything. Every dollar you're not overpaying for a conversion that would've happened anyway stays yours, not ours. If the honest answer is "keep spending," that's what we'll say.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Explainable, not opaque</h3>
+        <p class="small text-body-secondary mb-0">Every number we hand you traces back to a specific, checkable calculation &mdash; not a model you're asked to take on faith. If you can't ask why and get a real answer, we haven't done our job.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Both sides of the ledger</h3>
+        <p class="small text-body-secondary mb-0">We don't just show you where paid is overclaiming. We show you where organic and AI-influenced demand is going completely uncounted &mdash; the full picture, not half of it.</p>
+      </div>
+    </div>
+  </section> -->
+  <!-- <section class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Where we start</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Building this vertical by vertical, starting where the decision cycle is measurable and the budget at stake is real.</p>
+      </div></div>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3">
+        <li class="border px-3 py-2 font-monospace small">Remittance &amp; money transfer</li>
+        <li class="border px-3 py-2 font-monospace small">Banking</li>
+        <li class="border px-3 py-2 font-monospace small">Brokerage &amp; investing</li>
+        <li class="border px-3 py-2 font-monospace small">Betting &amp; prediction markets</li>
+        <li class="border px-3 py-2 font-monospace small">E-commerce</li>
+      </ul>
+      <p class="small text-body-secondary mb-0">Next: gaming, travel &amp; navigation, health &amp; fitness, education, utilities.</p>
+    </div>
+  </section> -->
+  <section id="for-agencies-sm" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">A measurement partner, not a threat</h2>
+      <div class="row"><div class="col-12">
+        <p>Full-service or paid-media-only, we work with agencies the same way we work with advertisers directly &mdash; as an independent measurement layer, not competition for the budget. It's the same zero-sum game you already play. You rebalance between Google and Meta every quarter based on what's actually converting. We're not asking you to do something new &mdash; we're adding unattributed as one more column in a reallocation you already run.</p>
+        <p class="text-body-secondary mb-4">And it's a capability you can bring to your own client relationships &mdash; an independent finding your client's finance team can't dispute, because it didn't come from the agency managing the spend.</p>
+      </div></div>
+      <div class="row">
+      <div class="border-top py-4 px-4 col-4">
+        <h3 class="fs-6 mb-1">Direction</h3>
+        <p class="small text-body-secondary mb-0">Which way the mix should move. What one engagement answers.</p>
+      </div>
+      <div class="border-top py-4 px-4 col-3">
+        <h3 class="fs-6 mb-1 col-4">Speed</h3>
+        <p class="small text-body-secondary mb-0">How fast you can move while watching this quarter's number.</p>
+      </div>
+      <div class="border-top py-4 px-4 col-3">
+        <h3 class="fs-6 mb-1 col-4">Velocity</h3>
+        <p class="small text-body-secondary mb-0">Your rate of change v/s that of competitor's.</p>
+      </div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-4 mb-0">Direction is a report. Speed and velocity are a relationship &mdash; which is why agencies that bring us in once tend to keep us on.</p>
+      </div></div>
+    </div>
+    </div>
+  </section>
+  <section class="border-top py-5">
+    <div class="container">
+      <div class="border-top pt-4">
+        <h2 class="fs-3 mb-3">In progress, on purpose</h2>
+        <p class="text-body-secondary mb-0">Currently running a live measurement pilot with a global remittance provider, testing this against a real budget decision &mdash; not a backtest.</p>
+        <div class="mt-3">
+        <p class="text-body-secondary mb-0">Every recommendation is validated with a scoped, reversible test before it touches a live budget. We'd rather be slow and right than fast and wrong about someone else's spend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="setup-lift-md" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Setup lift, compared.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">What each approach asks of your team before you get a first answer. No new pixels, no warehouse connection, no waiting for fresh data: we work from the history you already have.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="small fw-semibold text-body-secondary border-dark">Task</th><th class="small fw-semibold text-danger border-dark">Typical attribution platform</th><th class="small fw-semibold text-primary border-dark">Mixed Signals POC</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New tracking code (CNAME, pixel)</td><td class="small text-danger">Required &middot; Dev/IT, Marketing Ops</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Data warehouse connection</td><td class="small text-danger">Required &middot; Data engineering</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Campaign tracking cleanup</td><td class="small text-danger">Required &middot; Marketing + agencies</td><td class="small text-primary fw-medium">None, we use what you have</td></tr>
+            <tr><td>Ad platform and MMP data</td><td class="small text-danger">Account authentication</td><td class="small text-primary fw-medium">Report exports you already run</td></tr>
+            <tr><td>Conversion data</td><td class="small text-danger">Ongoing batch file feed</td><td class="small text-primary fw-medium">One export of receipts</td></tr>
+            <tr><td>AI-chat signal</td><td class="small text-danger">Not part of setup</td><td class="small text-primary fw-medium">One server log export</td></tr>
+            <tr><td>Waiting for clean data</td><td class="small text-danger">Yes, while new tracking collects</td><td class="small text-primary fw-medium">None, uses your existing history</td></tr>
+            <tr><td>Time to first answer</td><td class="small text-danger">Setup, then data collection</td><td class="small text-primary fw-medium">About 5&ndash;6 weeks, end to end</td></tr>
+            <tr><td class="border-dark">Price</td><td class="small text-danger border-dark">Platform subscription, quoted</td><td class="small text-primary fw-medium border-dark">$2,500, fixed</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+      <p class="small text-body-secondary mt-3 mb-0">Typical setup for pixel-based attribution platforms. Requirements vary by vendor.</p>
+    </div>
+  </section>
+  <section id="delta-check-sm" class="border-top py-5">
+    <div class="container">
+      <h2 class="fs-3 mb-4">Proof of concept</h2>
+      <p class="text-body-secondary mb-4">One month of attributed & unattributed transaction data <span class="font-monospace text-body">$2,500</span>, fixed, agreed before we start.</p>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-danger mb-2">Data gathering &mdash; expectation-managed</p>
+          <p class="mb-0">2&ndash;3 weeks, typically. Getting real transaction data out of a corporate entity is never instant &mdash; it depends on your team's turnaround, not ours. We send the reminders. You won't have to chase us.</p>
+      </div>
+      <div class="border-top py-4">
+          <p class="small fw-medium mb-2">Analysis &mdash; firm commitment</p>
+          <p class="mb-0">15 business days, starting the day we have your data in hand. This part is entirely in our control, so it's the part we're willing to guarantee.</p>
+      </div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-4 mb-4">What you get at the end: your real overcounting delta, in writing, with the math shown. No retainer. No year-long commitment. If the honest answer is "there's nothing here," you'll know that for a small, fixed fee &mdash; not a guess you paid a year for.</p>
+      </div></div>
+      <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-sm">Start your Delta Check</a>
+    </div>
+  </section>
+  <section id="contact-sm" class="bg-dark text-light py-5">
+    <div class="container">
+      <div class="row"><div class="col-12">
+        <h2 class="fs-3 text-light mb-3">Let's look at your numbers.</h2>
+        <p class="text-light text-opacity-75 mb-4">If you manage paid and organic together and have never gotten a straight answer about which is actually working, that's the conversation.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-light text-dark rounded-1 px-4 py-2" href="mailto:hello@mixedsignals.com">Email us</a>
+          <span class="font-monospace small text-light text-opacity-75">or find us on LinkedIn</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <footer class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap gap-2 small text-body-secondary">
+        <span>Mixed Signals</span>
+        <span>Attribution, audited.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- end Small (576px to 767px) -->
+
+<!-- ======================================================================
+     EXTRA SMALL (UNDER 576PX)
+     Shown only at this screen size (d-block d-sm-none). Edit the content here
+     to tailor it for this size; the other parts are not affected.
+     ====================================================================== -->
+<div class="d-block d-sm-none">
+  <header class="py-2">
+    <div class="container px-2">
+      <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="lh-sm">
+          <span class="h5 fw-semibold d-block mb-0">Mixed Signals</span>
+          <span class="small text-body-secondary">Attribution, audited</span>
+        </div>
+        <a class="btn bg-dark text-light rounded-1 px-3" href="#contact-xs">Get in touch</a>
+      </div>
+    </div>
+  </header>
+  <section>
+    <div class="container px-1">
+      <div class="row"><div class="col-12">
+        <h1 class="fs-4 fw-medium lh-sm mb-1">Add your <span class="text-success">attributed</span> & <span class="text-muted">unattributed</span> conversions. compare with receipts </h1>
+         <h2 class="fs-4 fw-small lh-sm mb-1">see the <em class="text-danger"> delta! </em> &#xa0; is it a MTA <strong class="text-warning"> blindspot?</strong></em></h2>
+         <p class="fs-6 text-body-secondary lh-lg mb-1">Tweak lookback window & minimize conversion delta </p>
+        
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-xs">Get in touch</a>
+          <a class="link-dark link-underline-opacity-0 fw-medium" href="#how-it-works-xs">See how it works</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="channel-map-xs" class="border-top py-4">
+    <div class="container px-4">
+      <h2 class="fs-3 mb-4">Every channel, mapped.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Before we show you the delta, here's where every channel actually sits &mdash; attribution window and funnel stage, no guessing.</p>
+      </div></div>
+      <div class="border-top border-dark col-12">
+        <table class="table mb-0 small">
+          <thead>
+            <tr><th class="fw-normal small text-body-secondary border-dark">Channel</th><th class="fw-normal small text-body-secondary border-dark">Lookback</th><th class="fw-normal small text-body-secondary border-dark">Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Search Ads</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Apple Search Ads</td><td class="font-monospace small text-body-secondary">30-day tap-through</td><td class="text-primary">Lower</td></tr>
+            <tr><td>Meta Ads</td><td class="font-monospace small text-body-secondary">1-day view, 7-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Snap Ads</td><td class="font-monospace small text-body-secondary">1-day view, 28-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Email</td><td class="font-monospace small text-body-secondary">1-day view, 10-day click</td><td class="text-primary">Mid</td></tr>
+            <tr><td>Blog post visit</td><td class="font-monospace small text-body-secondary">1-day view, 30-day click</td><td class="text-primary">Top</td></tr>
+            <tr><td class="text-danger fw-medium pt-4 border-dark">Unattributed (organic, self-driven) visitor</td><td class="pt-4 border-dark"></td><td class="text-primary pt-4 border-dark">sliding scale</td></tr>
+            <tr><td class="fw-medium">Same session conversion</td><td class="font-monospace small text-danger">1-day view, 1-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 2 days</td><td class="font-monospace small text-danger">1-day view, 2-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium">Conversion within 3 days</td><td class="font-monospace small text-danger">1-day view, 3-day click</td><td class="text-danger">High-intent, late-stage</td></tr>
+            <tr><td class="fw-medium border-dark">Conversion in 4 to 7 days</td><td class="font-monospace small text-danger border-dark">1-day view, 4&ndash;7-day click</td><td class="text-danger border-dark">High-intent, late-stage</td></tr>
+          </tbody>
+        </table>    </div>
+  </section>
+  <section class="border-top py-4">
+    <div class="container px-4">
+      <div class="row"><div class="col-12">
+        <div class="card bg-body-tertiary shadow-sm rounded-0 position-relative mb-3">
+          <div class="card-body p-4 pb-5">
+            <p class="small text-body-secondary mb-3">Audit note &mdash; New customer acquisition, Fintech</p>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top py-2">
+                <dt class="fw-normal">Platform claim</dt>
+                <dd class="font-monospace mb-0">30-day window</dd>
+              </div>
+              <div class="d-flex justify-content-between align-items-baseline gap-3 border-top border-bottom py-2">
+                <dt class="fw-normal">Measured lookback window</dt>
+                <dd class="font-monospace mb-0">1 day</dd>
+              </div>
+            </dl>
+          </div>
+          <span class="position-absolute top-100 end-0 translate-middle-y me-3 bg-body border border-danger text-danger font-monospace small fw-medium px-3 py-1">29 days unexplained</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <section id="the-math-xs" class="border-top py-4">
+    <div class="container px-4">
+      <h2 class="fs-3 mb-4">What we actually audit.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Let us audit your traffic behavior and map the correct install attribution window, view-through attribution window, and re-engagement attribution window.</p>
+        <p class="text-body-secondary mb-4">Every one of those windows feeds straight into your reported ROAS. Inflate the numerator with overcounted conversions, and your ROAS is wrong by the same margin &mdash; not once, but every reporting period.</p>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <div class="d-flex align-items-center gap-2 fw-medium small mb-2">Conversion lookback window <span class="badge rounded-pill border border-secondary text-body-secondary fst-italic fw-normal">i</span></div>
+        <div class="d-flex align-items-center gap-3 mb-4 small text-body-secondary">
+          <span>Hours</span>
+          <span class="d-inline-flex align-items-center gap-2 text-body"><span class="d-inline-block rounded-circle border border-3 border-primary p-1"></span>Days</span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small mb-3">
+          <span class="text-primary">Measured: 1 day</span><span class="text-danger">Platform claim: 30 days</span>
+        </div>
+        <div class="position-relative mx-2">
+          <div class="border-top border-2 border-danger border-opacity-50"></div>
+          <span class="position-absolute top-50 start-0 translate-middle rounded-circle border border-3 border-primary bg-body p-1"></span>
+          <span class="position-absolute top-50 start-100 translate-middle rounded-circle border border-3 border-danger bg-body p-1"></span>
+        </div>
+        <div class="d-flex justify-content-between font-monospace small text-body-secondary mt-3"><span>1</span><span>7</span><span>15</span><span>25</span><span>30</span></div>
+      </div></div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-5 mb-4">This is the one that actually produces the overcounting delta. It's the catch-and-release setting: how long a channel gets to hold a lead before releasing it back to the general pool. Hold too long, and a channel keeps claiming credit for someone who already converted through chat-researched, self-driven demand. Release too early, and whoever touches them next takes the win &mdash; even if it was never really theirs to claim.</p>
+        <p class="small text-body-secondary mb-0">30 days is the common platform default &mdash; shown here, not endorsed here. Your own corridor data already told a different story: some of your review-page lags measured in this conversation ran as short as a single day. There's no universal right answer, only the number that matches how your customers actually behave &mdash; which is exactly what the audit sets, corridor by corridor.</p>
+      </div></div>
+    </div>
+  </section>
+  <section id="how-it-works-xs" class="border-top py-4">
+    <div class="container px-4">
+      <div class="row"><div class="col-12">
+      <h2 class="fs-3 mb-4">Your dashboards are both overcounting and undercounting &mdash; just in different places.</h2>
+      </div></div>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-primary mb-2">What platforms claim</p>
+          <p>Every ad platform runs on a fixed lookback window, set once, for every advertiser, regardless of how their customers actually decide.</p>
+          <ul class="list-unstyled small text-body-secondary mb-3">
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Meta &mdash; default click window</span><span class="font-monospace text-body text-nowrap">7 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Google Ads &mdash; default, new Search/Display</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+            <li class="d-flex justify-content-between gap-3 border-top py-2"><span>Apple Search Ads &mdash; tap-through window</span><span class="font-monospace text-body text-nowrap">30 days</span></li>
+          </ul>
+          <p class="small text-body-secondary mb-0">Across the platforms and corridors we've measured, the real lag between a click and a conversion sits far closer to zero than any of these defaults &mdash; which means a real share of "attributed" credit is being claimed for conversions that would have happened anyway.</p>
+      </div>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-danger mb-2">What nobody claims</p>
+          <p>In the businesses we've analyzed, well over half of all downloads and in-app conversions can't be traced to a single ad click at all.</p>
+          <p class="small text-body-secondary mb-0">A growing share of that gap starts before anyone opens an app &mdash; someone researching a decision in ChatGPT, Claude, or Gemini, then acting on it days later. No ad platform sees that conversation. No MMP tags it. We measure it directly, corridor by corridor, from real conversion data.</p>
+      </div>
+    </div>
+  </section>
+ <!--  <section class="border-top py-4">
+    <div class="container px-4">
+      <div class="row"><div class="col-12">
+      <h2 class="fs-3 mb-4">Not a black box. Not a percentage of your ad spend.</h2>
+      </div></div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Flat fee</h3>
+        <p class="small text-body-secondary mb-0">We're not paid a percentage of your media spend, so cutting paid budget doesn't cost us anything. Every dollar you're not overpaying for a conversion that would've happened anyway stays yours, not ours. If the honest answer is "keep spending," that's what we'll say.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Explainable, not opaque</h3>
+        <p class="small text-body-secondary mb-0">Every number we hand you traces back to a specific, checkable calculation &mdash; not a model you're asked to take on faith. If you can't ask why and get a real answer, we haven't done our job.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Both sides of the ledger</h3>
+        <p class="small text-body-secondary mb-0">We don't just show you where paid is overclaiming. We show you where organic and AI-influenced demand is going completely uncounted &mdash; the full picture, not half of it.</p>
+      </div>
+    </div>
+  </section>
+  <section class="border-top py-4">
+    <div class="container px-4">
+      <h2 class="fs-3 mb-4">Where we start</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">Building this vertical by vertical, starting where the decision cycle is measurable and the budget at stake is real.</p>
+      </div></div>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3">
+        <li class="border px-3 py-2 font-monospace small">Remittance &amp; money transfer</li>
+        <li class="border px-3 py-2 font-monospace small">Banking</li>
+        <li class="border px-3 py-2 font-monospace small">Brokerage &amp; investing</li>
+        <li class="border px-3 py-2 font-monospace small">Betting &amp; prediction markets</li>
+        <li class="border px-3 py-2 font-monospace small">E-commerce</li>
+      </ul>
+      <p class="small text-body-secondary mb-0">Next: gaming, travel &amp; navigation, health &amp; fitness, education, utilities.</p>
+    </div>
+  </section> -->
+  <section id="for-agencies-xs" class="border-top py-4">
+    <div class="container px-4">
+      <h2 class="fs-3 mb-4">A measurement partner, not a threat</h2>
+      <div class="row"><div class="col-12">
+        <p>Full-service or paid-media-only, we work with agencies the same way we work with advertisers directly &mdash; as an independent measurement layer, not competition for the budget. It's the same zero-sum game you already play. You rebalance between Google and Meta every quarter based on what's actually converting. We're not asking you to do something new &mdash; we're adding unattributed as one more column in a reallocation you already run.</p>
+        <p class="text-body-secondary mb-4">And it's a capability you can bring to your own client relationships &mdash; an independent finding your client's finance team can't dispute, because it didn't come from the agency managing the spend.</p>
+      </div></div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Direction</h3>
+        <p class="small text-body-secondary mb-0">Which way the mix should move. What one engagement answers.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Speed</h3>
+        <p class="small text-body-secondary mb-0">How fast you can move it without spooking a board watching this quarter's number.</p>
+      </div>
+      <div class="border-top py-4">
+        <h3 class="fs-5 mb-2">Velocity</h3>
+        <p class="small text-body-secondary mb-0">Whether you're moving fast enough &mdash; a competitor already capturing the demand you're still deciding whether to chase makes standing still a decision too.</p>
+      </div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-4 mb-0">Direction is a report. Speed and velocity are a relationship &mdash; which is why agencies that bring us in once tend to keep us on.</p>
+      </div></div>
+    </div>
+  </section>
+ <!--  <section class="border-top py-4">
+    <div class="container px-4">
+      <div class="border-top pt-4">
+        <h2 class="fs-3 mb-3">In progress, on purpose</h2>
+        <p class="text-body-secondary mb-0">Currently running a live measurement pilot with a global remittance provider, testing this against a real budget decision &mdash; not a backtest.</p>
+        <div class="mt-3">
+        <p class="text-body-secondary mb-0">Every recommendation is validated with a scoped, reversible test before it touches a live budget. We'd rather be slow and right than fast and wrong about someone else's spend.</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <section id="setup-lift-xs" class="border-top py-4">
+    <div class="container">
+      <h2 class="fs-2 mb-2">Setup lift, compared.</h2>
+      <div class="row"><div class="col-12">
+        <p class="text-body-secondary mb-4">What each approach asks of your team before you get a first answer. No new pixels, no warehouse connection, no waiting for fresh data: we work from the history you already have.</p>
+      </div></div>
+   <div class="row"><div class="col-12">
+        <div class="border-top border-dark">
+        <table class="table mb-0">
+          <thead>
+            <tr><th class="small fw-semibold text-body-secondary border-dark">Task</th><th class="small fw-semibold text-danger border-dark">Typical attribution platform</th><th class="small fw-semibold text-primary border-dark">Mixed Signals POC</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New tracking code (CNAME, pixel)</td><td class="small text-danger">Required &middot; Dev/IT, Marketing Ops</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Data warehouse connection</td><td class="small text-danger">Required &middot; Data engineering</td><td class="small text-primary fw-medium">None</td></tr>
+            <tr><td>Campaign tracking cleanup</td><td class="small text-danger">Required &middot; Marketing + agencies</td><td class="small text-primary fw-medium">None, we use what you have</td></tr>
+            <tr><td>Ad platform and MMP data</td><td class="small text-danger">Account authentication</td><td class="small text-primary fw-medium">Report exports you already run</td></tr>
+            <tr><td>Conversion data</td><td class="small text-danger">Ongoing batch file feed</td><td class="small text-primary fw-medium">One export of receipts</td></tr>
+            <tr><td>AI-chat signal</td><td class="small text-danger">Not part of setup</td><td class="small text-primary fw-medium">One server log export</td></tr>
+            <tr><td>Waiting for clean data</td><td class="small text-danger">Yes, while new tracking collects</td><td class="small text-primary fw-medium">None, uses your existing history</td></tr>
+            <tr><td>Time to first answer</td><td class="small text-danger">Setup, then data collection</td><td class="small text-primary fw-medium">About 5&ndash;6 weeks, end to end</td></tr>
+            <tr><td class="border-dark">Price</td><td class="small text-danger border-dark">Platform subscription, quoted</td><td class="small text-primary fw-medium border-dark">$2,500, fixed</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div></div>
+      <p class="small text-body-secondary mt-3 mb-0">Typical setup for pixel-based attribution platforms. Requirements vary by vendor.</p>
+    </div>
+  </section>
+  <section id="delta-check-xs" class="border-top py-4">
+    <div class="container px-4">
+      <h2 class="fs-3 mb-4">Proof of Concept.</h2>
+      <p class="text-body-secondary mb-4">One month data ( attributed + unattributed) <span class="font-monospace text-body">$2,500</span>, fixed, agreed before we start.</p>
+      <div class="border-top py-4">
+          <p class="small fw-medium text-danger mb-2">Data gathering &mdash; expectation-managed</p>
+          <p class="mb-0">2&ndash;3 weeks, typically. Getting real transaction data out of a corporate entity is never instant &mdash; it depends on your team's turnaround, not ours. We send the reminders. You won't have to chase us.</p>
+      </div>
+      <div class="border-top py-4">
+          <p class="small fw-medium mb-2">Analysis &mdash; firm commitment</p>
+          <p class="mb-0">15 business days, starting the day we have your data in hand. This part is entirely in our control, so it's the part we're willing to guarantee.</p>
+      </div>
+      <div class="row"><div class="col-12">
+        <p class="small text-body-secondary mt-4 mb-4">What you get at the end: your real overcounting delta, in writing, with the math shown. No retainer. No year-long commitment. If the honest answer is "there's nothing here," you'll know that for a small, fixed fee &mdash; not a guess you paid a year for.</p>
+      </div></div>
+      <a class="btn bg-dark text-light rounded-1 px-4 py-2" href="#contact-xs">Start your Delta Check</a>
+    </div>
+  </section>
+  <section id="contact-xs" class="bg-dark text-light py-4">
+    <div class="container px-4">
+      <div class="row"><div class="col-12">
+        <h2 class="fs-3 text-light mb-3">Let's look at your numbers.</h2>
+        <p class="text-light text-opacity-75 mb-4">If you manage paid and organic together and have never gotten a straight answer about which is actually working, that's the conversation.</p>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+          <a class="btn bg-light text-dark rounded-1 px-4 py-2" href="mailto:hello@mixedsignals.com">Email us</a>
+          <span class="font-monospace small text-light text-opacity-75">or find us on LinkedIn</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+  <footer class="py-4">
+    <div class="container px-4">
+      <div class="d-flex justify-content-between flex-wrap gap-2 small text-body-secondary">
+        <span>Mixed Signals</span>
+        <span>Attribution, audited.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- end Extra small (under 576px) -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
+</body>
+</html>
